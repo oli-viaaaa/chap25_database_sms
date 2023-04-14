@@ -1,0 +1,165 @@
+CREATE TABLE "tbl_student" (
+	"stu_id"	number(10)		NOT NULL,
+	"dept_id"	number(10)		NOT NULL,
+	"stu_name"	varchar2(10)		NOT NULL,
+	"resident_id"	varchar2(14)		NOT NULL,
+	"gender"	char(4)	DEFAULT '남'	NOT NULL,
+	"address"	varchar2(50)		NULL,
+	"grade"	number(2)	DEFAULT 1	NOT NULL
+);
+
+COMMENT ON COLUMN "tbl_student"."stu_id" IS '학번';
+
+COMMENT ON COLUMN "tbl_student"."dept_id" IS '학과번호';
+
+COMMENT ON COLUMN "tbl_student"."stu_name" IS '학생명';
+
+COMMENT ON COLUMN "tbl_student"."resident_id" IS '주민번호';
+
+COMMENT ON COLUMN "tbl_student"."gender" IS '성별';
+
+COMMENT ON COLUMN "tbl_student"."address" IS '주소';
+
+COMMENT ON COLUMN "tbl_student"."grade" IS '학년';
+
+CREATE TABLE "tbl_dept" (
+	"dept_id"	number(10)		NOT NULL,
+	"dept_name"	varchar2(20)		NOT NULL
+);
+
+COMMENT ON COLUMN "tbl_dept"."dept_id" IS '학과번호';
+
+COMMENT ON COLUMN "tbl_dept"."dept_name" IS '학과명';
+
+CREATE TABLE "tbl_professor" (
+	"professor_id"	number(10)		NOT NULL,
+	"dept_id"	number(10)		NOT NULL,
+	"professor_name"	varchar2(10)		NOT NULL,
+	"resident_id"	varchar2(14)		NOT NULL,
+	"hiredate"	date	DEFAULT sysdate	NOT NULL
+);
+
+COMMENT ON COLUMN "tbl_professor"."professor_id" IS '교수번호';
+
+COMMENT ON COLUMN "tbl_professor"."dept_id" IS '학과번호';
+
+COMMENT ON COLUMN "tbl_professor"."professor_name" IS '교수명';
+
+COMMENT ON COLUMN "tbl_professor"."resident_id" IS '주민번호';
+
+COMMENT ON COLUMN "tbl_professor"."hiredate" IS '입사일';
+
+CREATE TABLE "tbl_course" (
+	"course_id"	number(10)		NOT NULL,
+	"professor_id"	number(10)		NOT NULL,
+	"room_id"	number(10)		NOT NULL,
+	"course_name"	varchar2(100)		NOT NULL,
+	"credit"	number(3)		NOT NULL,
+	"c_date"	date	DEFAULT sysdate	NOT NULL
+);
+
+COMMENT ON COLUMN "tbl_course"."course_id" IS '강좌번호';
+
+COMMENT ON COLUMN "tbl_course"."professor_id" IS '교수번호';
+
+COMMENT ON COLUMN "tbl_course"."room_id" IS '강의실 번호';
+
+COMMENT ON COLUMN "tbl_course"."course_name" IS '강좌명';
+
+COMMENT ON COLUMN "tbl_course"."credit" IS '이수학점';
+
+COMMENT ON COLUMN "tbl_course"."c_date" IS '강의시간';
+
+CREATE TABLE "tbl_classroom" (
+	"room_id"	number(10)		NOT NULL,
+	"room_name"	varchar2(20)		NOT NULL
+);
+
+COMMENT ON COLUMN "tbl_classroom"."room_id" IS '강의실 번호';
+
+COMMENT ON COLUMN "tbl_classroom"."room_name" IS '강의실 명';
+
+CREATE TABLE "tbl_enrollment" (
+	"enrollment_id"	number(10)		NOT NULL,
+	"course_id"	number(10)		NOT NULL,
+	"stu_id"	number(10)		NOT NULL,
+	"score"	varchar2(5)		NOT NULL,
+	"enrollment_date"	date	DEFAULT sysdate	NOT NULL
+);
+
+COMMENT ON COLUMN "tbl_enrollment"."enrollment_id" IS '수강번호';
+
+COMMENT ON COLUMN "tbl_enrollment"."course_id" IS '강좌번호';
+
+COMMENT ON COLUMN "tbl_enrollment"."stu_id" IS '학번';
+
+COMMENT ON COLUMN "tbl_enrollment"."score" IS '점수';
+
+COMMENT ON COLUMN "tbl_enrollment"."enrollment_date" IS '수강등록일';
+
+ALTER TABLE "tbl_student" ADD CONSTRAINT "PK_TBL_STUDENT" PRIMARY KEY (
+	"stu_id"
+);
+
+ALTER TABLE "tbl_dept" ADD CONSTRAINT "PK_TBL_DEPT" PRIMARY KEY (
+	"dept_id"
+);
+
+ALTER TABLE "tbl_professor" ADD CONSTRAINT "PK_TBL_PROFESSOR" PRIMARY KEY (
+	"professor_id"
+);
+
+ALTER TABLE "tbl_course" ADD CONSTRAINT "PK_TBL_COURSE" PRIMARY KEY (
+	"course_id"
+);
+
+ALTER TABLE "tbl_classroom" ADD CONSTRAINT "PK_TBL_CLASSROOM" PRIMARY KEY (
+	"room_id"
+);
+
+ALTER TABLE "tbl_enrollment" ADD CONSTRAINT "PK_TBL_ENROLLMENT" PRIMARY KEY (
+	"enrollment_id"
+);
+
+ALTER TABLE "tbl_student" ADD CONSTRAINT "FK_tbl_dept_TO_tbl_student_1" FOREIGN KEY (
+	"dept_id"
+)
+REFERENCES "tbl_dept" (
+	"dept_id"
+);
+
+ALTER TABLE "tbl_professor" ADD CONSTRAINT "FK_tbl_dept_TO_tbl_professor_1" FOREIGN KEY (
+	"dept_id"
+)
+REFERENCES "tbl_dept" (
+	"dept_id"
+);
+
+ALTER TABLE "tbl_course" ADD CONSTRAINT "FK_tbl_professor_TO_tbl_course_1" FOREIGN KEY (
+	"professor_id"
+)
+REFERENCES "tbl_professor" (
+	"professor_id"
+);
+
+ALTER TABLE "tbl_course" ADD CONSTRAINT "FK_tbl_classroom_TO_tbl_course_1" FOREIGN KEY (
+	"room_id"
+)
+REFERENCES "tbl_classroom" (
+	"room_id"
+);
+
+ALTER TABLE "tbl_enrollment" ADD CONSTRAINT "FK_tbl_course_TO_tbl_enrollment_1" FOREIGN KEY (
+	"course_id"
+)
+REFERENCES "tbl_course" (
+	"course_id"
+);
+
+ALTER TABLE "tbl_enrollment" ADD CONSTRAINT "FK_tbl_student_TO_tbl_enrollment_1" FOREIGN KEY (
+	"stu_id"
+)
+REFERENCES "tbl_student" (
+	"stu_id"
+);
+
